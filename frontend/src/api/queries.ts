@@ -112,6 +112,7 @@ export function useSaveRecipe() {
       queryClient.invalidateQueries({ queryKey: keys.recipes });
       queryClient.invalidateQueries({ queryKey: keys.tags });
       queryClient.invalidateQueries({ queryKey: keys.favorites });
+      queryClient.invalidateQueries({ queryKey: keys.meals });
     },
   });
 }
@@ -125,6 +126,7 @@ export function useDeleteRecipe() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: keys.recipes });
       queryClient.invalidateQueries({ queryKey: keys.favorites });
+      queryClient.invalidateQueries({ queryKey: keys.meals });
     },
   });
 }
