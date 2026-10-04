@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -83,8 +83,25 @@ class FavoriteExport(BaseModel):
     created_at: datetime
 
 
+class MealIn(BaseModel):
+    recipe_id: int
+    eaten_on: date
+    rating: int | None = Field(default=None, ge=1, le=5)
+    comment: str | None = None
+
+
+class MealRead(MealIn):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    username: str
+    recipe_title: str
+    created_at: datetime
+
+
 class ExportData(BaseModel):
     version: int = 1
     exported_at: datetime
     recipes: list[RecipeRead]
     favorites: list[FavoriteExport]
+    meals: list[MealRead] = []

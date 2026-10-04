@@ -8,6 +8,7 @@ import { ConfirmDialog } from "../components/ConfirmDialog";
 import { DifficultyBadge } from "../components/DifficultyBadge";
 import { FavoriteButton } from "../components/FavoriteButton";
 import { IngredientChecklist } from "../components/IngredientChecklist";
+import { MealLog } from "../components/MealLog";
 import { ErrorState } from "../components/States";
 import { useToast } from "../components/Toast";
 import { formatDuration, isIncomplete, sourceDomain } from "../lib/format";
@@ -24,6 +25,7 @@ export function RecipePage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const queryClient = useQueryClient();
 
+  if (!Number.isInteger(id)) return <NotFoundPage message="Recette introuvable." />;
   if (isPending) return <div className="h-64 animate-pulse rounded-2xl bg-stone-200/70" />;
   if (isError) {
     if (error instanceof ApiError && error.status === 404) return <NotFoundPage message="Recette introuvable." />;
@@ -132,6 +134,8 @@ export function RecipePage() {
           <p className="whitespace-pre-line">{recipe.notes}</p>
         </section>
       )}
+
+      <MealLog recipeId={recipe.id} />
 
       <ConfirmDialog
         open={confirmDelete}

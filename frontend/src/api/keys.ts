@@ -7,4 +7,6 @@ export const keys = {
   recipe: (id: number) => ["recipe", id] as const,
   tags: ["tags"] as const,
   favorites: ["favorites"] as const,
+  meals: ["meals"] as const,
+  mealList: (recipeId?: number) => ["meals", recipeId ?? "all"] as const,
 };

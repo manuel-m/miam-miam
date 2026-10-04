@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import { useAuth } from "../auth/AuthProvider";
 import { apiFetch } from "./client";
 import { keys } from "./keys";
-import type { Recipe, RecipeFilters, RecipeInput, Tag } from "./types";
+import type { Meal, MealInput, Recipe, RecipeFilters, RecipeInput, Tag } from "./types";
 
 export const PAGE_SIZE = 24;
 
@@ -126,5 +126,31 @@ export function useDeleteRecipe() {
       queryClient.invalidateQueries({ queryKey: keys.recipes });
       queryClient.invalidateQueries({ queryKey: keys.favorites });
     },
+  });
+}
+
+/** Repas d'une recette, ou tous les repas (journal) sans recipeId. */
+export function useMeals(recipeId?: number) {
+  const { isAuthenticated } = useAuth();
+  return useQuery({
+    queryKey: keys.mealList(recipeId),
+    queryFn: () => apiFetch<Meal[]>(recipeId ? `/me/meals?recipe_id=${recipeId}` : "/me/meals"),
+    enabled: isAuthenticated,
+  });
+}
+
+export function useAddMeal() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: MealInput) => apiFetch<Meal>("/me/meals", { method: "POST", body: JSON.stringify(input) }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: keys.meals }),
+  });
+}
+
+export function useDeleteMeal() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => apiFetch<void>(`/me/meals/${id}`, { method: "DELETE" }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: keys.meals }),
   });
 }

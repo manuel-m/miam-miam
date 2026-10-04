@@ -7,6 +7,7 @@ import { RequireAuth } from "./auth/RequireAuth";
 import { Layout } from "./components/Layout";
 import { ToastProvider } from "./components/Toast";
 import { FavoritesPage } from "./pages/FavoritesPage";
+import { JournalPage } from "./pages/JournalPage";
 import { LoginPage } from "./pages/LoginPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { RecipeFormPage } from "./pages/RecipeFormPage";
@@ -30,10 +31,11 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "/", element: <RecipesPage /> },
-      { path: "/recettes/nouvelle", element: <RequireAuth><RecipeFormPage /></RequireAuth> },
+      { path: "/recettes/nouvelle", element: <RequireAuth preserveOnExpiry><RecipeFormPage /></RequireAuth> },
       { path: "/recettes/:id", element: <RecipePage /> },
-      { path: "/recettes/:id/modifier", element: <RequireAuth><RecipeFormPage /></RequireAuth> },
+      { path: "/recettes/:id/modifier", element: <RequireAuth preserveOnExpiry><RecipeFormPage /></RequireAuth> },
       { path: "/favoris", element: <RequireAuth><FavoritesPage /></RequireAuth> },
+      { path: "/journal", element: <RequireAuth><JournalPage /></RequireAuth> },
       { path: "/connexion", element: <LoginPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],

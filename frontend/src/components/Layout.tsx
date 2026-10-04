@@ -123,6 +123,9 @@ export function Layout() {
               Favoris
               <FavoritesCount />
             </NavLink>
+            <NavLink to="/journal" className={navClass}>
+              Journal
+            </NavLink>
           </nav>
           <div className="ml-auto flex items-center gap-3">
             <button type="button" onClick={newRecipe} className="btn-primary hidden sm:inline-flex">
@@ -147,6 +150,9 @@ export function Layout() {
         </button>
         <NavLink to="/favoris" className={tabClass}>
           <span className="text-lg">♥</span>Favoris
+        </NavLink>
+        <NavLink to="/journal" className={tabClass}>
+          <span className="text-lg">📖</span>Journal
         </NavLink>
       </nav>
     </>

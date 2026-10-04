@@ -68,3 +68,15 @@ export interface Token {
   access_token: string;
   token_type: string;
 }
+
+/** Repas : recette consommée (MealRead côté API). */
+export interface Meal {
+  id: number;
+  recipe_id: number;
+  recipe_title: string;
+  eaten_on: string; // AAAA-MM-JJ
+  rating: number | null; // 1 à 5
+  comment: string | null;
+}
+
+export type MealInput = Omit<Meal, "id" | "recipe_title">;

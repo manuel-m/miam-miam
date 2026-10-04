@@ -211,6 +211,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (save.isPending) return;
     const { input, errors } = validate(state);
     setErrors(errors);
     if (!input) return;
@@ -236,6 +237,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5 pb-24" noValidate>
+      <fieldset disabled={save.isPending} className="min-w-0 space-y-5" aria-busy={save.isPending}>
       <h1 className="text-2xl font-bold">{recipe ? "Modifier la recette" : "Nouvelle recette"}</h1>
 
       <Section title="Infos">
@@ -408,6 +410,8 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
         </div>
       </div>
 
+      </fieldset>
+
       <ConfirmDialog
         open={blocker.state === "blocked"}
         title="Quitter sans enregistrer ?"
@@ -428,6 +432,7 @@ export function RecipeFormPage() {
   const query = useRecipe(recipeId);
 
   if (!id) return <RecipeForm />;
+  if (!Number.isInteger(recipeId)) return <NotFoundPage message="Recette introuvable." />;
   if (query.isPending) return <div className="h-64 animate-pulse rounded-2xl bg-stone-200/70" />;
   if (query.isError) {
     if (query.error instanceof ApiError && query.error.status === 404) return <NotFoundPage message="Recette introuvable." />;

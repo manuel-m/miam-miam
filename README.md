@@ -62,6 +62,9 @@ de recettes et les favoris exigent le token.
 | GET | `/me/favorites` 🔒 | mes recettes favorites |
 | PUT | `/me/favorites/{id}` 🔒 | ajouter aux favoris |
 | DELETE | `/me/favorites/{id}` 🔒 | retirer des favoris |
+| GET | `/me/meals?recipe_id=` 🔒 | mes repas (journal ; filtrable par recette) |
+| POST | `/me/meals` 🔒 | enregistrer un repas |
+| DELETE | `/me/meals/{id}` 🔒 | supprimer un repas |
 | GET | `/export` 🔒 | export JSON de la base (téléchargement) |
 
 🔒 = token requis (ainsi que POST/PUT/PATCH/DELETE sur `/recipes`).

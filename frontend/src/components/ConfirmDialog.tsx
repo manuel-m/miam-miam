@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface Props {
   open: boolean;
@@ -20,7 +21,8 @@ export function ConfirmDialog({ open, title, message, confirmLabel, danger, onCo
 
   if (!open) return null;
 
-  return (
+  // Portail : la modale ne doit pas hériter du transform/overflow d'un parent (ex. carte au survol).
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-900/40 p-4 sm:items-center" onClick={onCancel}>
       <div
         role="alertdialog"
@@ -40,6 +42,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel, danger, onCo
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

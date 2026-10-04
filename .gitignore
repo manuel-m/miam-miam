@@ -1,3 +1,11 @@
+# Legacy checkouts keep ignored files at the repository root.
+.venv/
+__pycache__/
+*.db
+.env
+exports/
+recettes.md
+
 # api
 api/.venv/
 **/__pycache__/

@@ -8,7 +8,7 @@ function safeNext(next: string | null): string {
   return next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
 }
 
-export function LoginPage() {
+export function LoginPage({ embedded = false }: { embedded?: boolean }) {
   const { isAuthenticated, login } = useAuth();
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  if (isAuthenticated && !pending) return <Navigate to={next} replace />;
+  if (!embedded && isAuthenticated && !pending) return <Navigate to={next} replace />;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ export function LoginPage() {
     setError(null);
     try {
       await login(username, password);
-      navigate(next, { replace: true });
+      if (!embedded) navigate(next, { replace: true });
     } catch (err) {
       setError(
         err instanceof ApiError && err.status === 401
@@ -43,7 +43,9 @@ export function LoginPage() {
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <div>
           <h1 className="text-xl font-bold">Connexion</h1>
-          <p className="mt-1 text-sm text-stone-500">Pour gérer tes favoris et tes recettes.</p>
+          <p className="mt-1 text-sm text-stone-500">
+            {embedded ? "Reconnecte-toi pour continuer. Ton brouillon est conservé." : "Pour gérer tes favoris et tes recettes."}
+          </p>
         </div>
         <div>
           <label htmlFor="username" className="label">Identifiant</label>

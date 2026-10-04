@@ -1,7 +1,7 @@
 import enum
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import JSON, Column, DateTime, Enum, ForeignKey, String, Table, Text, func
+from sqlalchemy import JSON, Column, Date, DateTime, Enum, ForeignKey, String, Table, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -78,3 +78,23 @@ class Favorite(Base):
         ForeignKey("recipes.id", ondelete="CASCADE"), primary_key=True
     )
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class Meal(Base):
+    """Un repas : recette consommée par un utilisateur, avec date, note en étoiles et commentaire."""
+
+    __tablename__ = "meals"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(String(100), index=True)
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipes.id", ondelete="CASCADE"))
+    eaten_on: Mapped[date] = mapped_column(Date)
+    rating: Mapped[int | None]
+    comment: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+    recipe: Mapped[Recipe] = relationship(lazy="joined")
+
+    @property
+    def recipe_title(self) -> str:
+        return self.recipe.title
