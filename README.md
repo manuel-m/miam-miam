@@ -1,31 +1,37 @@
-# Recettes – API
+# Miam-miam
 
-Backend FastAPI + SQLAlchemy 2.0, stockage SQLite (`recettes.db`, créé automatiquement).
+- `api/` : backend FastAPI + SQLAlchemy 2.0, stockage SQLite (`api/recettes.db`, créé automatiquement)
+- `frontend/` : React + Vite + TanStack Query + Tailwind (pnpm)
 
 ## Lancer
 
 Toutes les commandes passent par le `Makefile` (`make` seul affiche l'aide) :
 
-`recettes.md` (liste de liens de recettes lue par `make import`) est un fichier local, non versionné.
+`api/recettes.md` (liste de liens de recettes lue par `make import`) est un fichier local, non versionné.
 
 ```bash
 make install    # uv sync
-cp .env.example .env   # puis remplir (voir Authentification)
+cp api/.env.example api/.env   # puis remplir (voir Authentification)
 make import     # importe les liens de recettes.md (idempotent)
 make dev        # API en mode dev -> http://127.0.0.1:8000/docs  (make dev PORT=8001)
 make run        # API en mode production
 make reset-db   # supprime recettes.db puis réimporte
-make export     # exporte la base en JSON -> exports/recettes-AAAAMMJJ-HHMMSS.json
+make export     # exporte la base en JSON -> api/exports/recettes-AAAAMMJJ-HHMMSS.json
 make clean      # supprime .venv et les caches (garde la base)
+
+make front-install   # pnpm install
+make front-dev       # http://localhost:5173 (proxy /api -> API sur :8000)
+make front-build     # build de prod -> frontend/dist
+make dev-all         # API + frontend en parallèle
 ```
 
 ## Authentification
 
-Un seul utilisateur, défini dans `.env` (non versionné, modèle : `.env.example`) :
+Un seul utilisateur, défini dans `api/.env` (non versionné, modèle : `.env.example`) :
 
 ```bash
-make hash-password   # -> APP_PASSWORD_HASH='...'  à coller dans .env
-make secret          # -> JWT_SECRET=...           à coller dans .env
+make hash-password   # -> APP_PASSWORD_HASH='...'  à coller dans api/.env
+make secret          # -> JWT_SECRET=...           à coller dans api/.env
 ```
 
 Obtenir un token puis l'utiliser dans le header `Authorization` :
@@ -60,7 +66,7 @@ de recettes et les favoris exigent le token.
 
 🔒 = token requis (ainsi que POST/PUT/PATCH/DELETE sur `/recipes`).
 
-## Structure
+## Structure (`api/`)
 
 - `app/database.py` – moteur SQLite, session, `Base`
 - `app/models.py` – tables (Recipe, Ingredient, Tag)
@@ -73,3 +79,5 @@ de recettes et les favoris exigent le token.
 - `app/export.py` – construction de l'export JSON
 - `scripts/export_json.py` – export JSON en ligne de commande
 - `scripts/hash_password.py` – génération du hash du mot de passe
+
+Frontend : `frontend/src/{api,auth,components,pages,lib}` (client HTTP + hooks TanStack Query, auth JWT, composants, pages).

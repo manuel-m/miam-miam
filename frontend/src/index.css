@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-500: #f97316;
+  --color-brand-600: #ea580c;
+  --color-brand-700: #c2410c;
+}
+
+/* Laisse la place à la barre d'onglets mobile en bas de l'écran. */
+@media (max-width: 639px) {
+  body {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Petites classes réutilisées partout (boutons, champs). */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-50 disabled:opacity-50;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-50;
+  }
+  .btn-icon {
+    @apply grid size-8 place-items-center rounded-lg border border-stone-300 bg-white text-stone-600 transition hover:bg-stone-50 disabled:opacity-30;
+  }
+  .input {
+    @apply rounded-lg border border-stone-300 bg-white px-3 py-2 outline-none transition focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100;
+  }
+  .label {
+    @apply mb-1 block text-sm font-medium text-stone-700;
+  }
+  .menu-item {
+    @apply block w-full px-4 py-2 text-left text-sm text-stone-700 hover:bg-stone-50;
+  }
+}

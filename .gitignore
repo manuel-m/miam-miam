@@ -1,6 +1,11 @@
-.venv/
-__pycache__/
-*.db
-.env
-exports/
-recettes.md
+# api
+api/.venv/
+**/__pycache__/
+api/*.db
+api/.env
+api/exports/
+api/recettes.md
+
+# frontend
+frontend/node_modules/
+frontend/dist/
