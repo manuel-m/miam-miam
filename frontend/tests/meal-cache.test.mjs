@@ -27,7 +27,7 @@ for (const operation of ["rename", "delete"]) {
     t.after(() => client.clear());
     const previous = [{ id: 1, recipe_id: 7, recipe_title: "Ancien titre" }];
     const updated = operation === "delete" ? [] : [{ ...previous[0], recipe_title: "Nouveau titre" }];
-    const mealKeys = [keys.mealList(), keys.mealList(7)];
+    const mealKeys = [keys.mealList("alice"), keys.mealList("alice", 7)];
     for (const key of mealKeys) client.setQueryData(key, previous);
 
     t.mock.method(globalThis, "fetch", async (url, options) => {
@@ -58,3 +58,22 @@ for (const operation of ["rename", "delete"]) {
     }
   });
 }
+
+test("switching accounts never reuses another user's fresh meal history", async (t) => {
+  const client = new QueryClient({ defaultOptions: { queries: { staleTime: 30_000 } } });
+  t.after(() => client.clear());
+  for (const recipeId of [undefined, 7]) {
+    const privateMeals = [{ id: 1, comment: "Commentaire privé d'Alice" }];
+    client.setQueryData(keys.mealList("alice", recipeId), privateMeals);
+    assert.equal(client.getQueryData(keys.mealList(null, recipeId)), undefined);
+    assert.equal(client.getQueryData(keys.mealList("bob", recipeId)), undefined);
+    let requests = 0;
+    const meals = await client.fetchQuery({
+      queryKey: keys.mealList("bob", recipeId),
+      queryFn: async () => { requests++; return []; },
+    });
+    assert.equal(requests, 1);
+    assert.deepEqual(meals, []);
+    assert.deepEqual(client.getQueryData(keys.mealList("alice", recipeId)), privateMeals);
+  }
+});

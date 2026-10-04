@@ -8,5 +8,5 @@ export const keys = {
   tags: ["tags"] as const,
   favorites: ["favorites"] as const,
   meals: ["meals"] as const,
-  mealList: (recipeId?: number) => ["meals", recipeId ?? "all"] as const,
+  mealList: (username: string | null, recipeId?: number) => ["meals", username, recipeId ?? "all"] as const,
 };

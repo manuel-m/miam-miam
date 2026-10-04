@@ -53,9 +53,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
   }, [show]);
 
-  // Les favoris appartiennent à l'utilisateur : on les oublie à la déconnexion.
+  // Les données privées sont oubliées à la déconnexion.
   useEffect(() => {
-    if (!token) queryClient.removeQueries({ queryKey: keys.favorites });
+    if (!token) {
+      queryClient.removeQueries({ queryKey: keys.favorites });
+      queryClient.removeQueries({ queryKey: keys.meals });
+    }
   }, [token, queryClient]);
 
   const login = useCallback(async (username: string, password: string) => {

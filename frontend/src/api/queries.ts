@@ -133,9 +133,9 @@ export function useDeleteRecipe() {
 
 /** Repas d'une recette, ou tous les repas (journal) sans recipeId. */
 export function useMeals(recipeId?: number) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, username } = useAuth();
   return useQuery({
-    queryKey: keys.mealList(recipeId),
+    queryKey: keys.mealList(username, recipeId),
     queryFn: () => apiFetch<Meal[]>(recipeId ? `/me/meals?recipe_id=${recipeId}` : "/me/meals"),
     enabled: isAuthenticated,
   });
