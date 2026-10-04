@@ -16,7 +16,9 @@ make import     # importe les liens de recettes.md (idempotent)
 make dev        # API en mode dev -> http://127.0.0.1:8000/docs  (make dev PORT=8001)
 make run        # API en mode production
 make reset-db   # supprime recettes.db puis réimporte
+make fetch-details  # complète ingrédients, étapes et portions depuis les pages sources
 make export     # exporte la base en JSON -> api/exports/recettes-AAAAMMJJ-HHMMSS.json
+make restore    # remplace la base par le dernier export (FILE=… pour en choisir un), après confirmation
 make clean      # supprime .venv et les caches (garde la base)
 
 make front-install   # pnpm install

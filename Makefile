@@ -5,7 +5,7 @@ FRONT_DIR := frontend
 PORT      ?= 8000
 FRONT_PORT ?= 5173
 
-.PHONY: help install dev run import reset-db export hash-password secret clean \
+.PHONY: fetch-details restore help install dev run import reset-db export hash-password secret clean \
         front-install front-dev front-build dev-all
 
 # --- API (FastAPI, dossier api/) ---------------------------------------------
@@ -22,12 +22,18 @@ run:        ## Lancer l'API en mode production
 import:     ## Importer les liens de recettes.md dans la base (idempotent)
 	cd $(API_DIR) && $(UV) run python -m scripts.import_markdown
 
+fetch-details: ## Compléter ingrédients, étapes et portions depuis les pages sources
+	cd $(API_DIR) && $(UV) run python -m scripts.fetch_details
+
 reset-db:   ## Supprimer la base puis réimporter recettes.md
 	rm -f $(API_DIR)/recettes.db
 	$(MAKE) import
 
 export:     ## Exporter la base en JSON dans api/exports/
 	cd $(API_DIR) && $(UV) run python -m scripts.export_json
+
+restore:    ## Restaurer la base depuis un export JSON (FILE=… sinon le dernier de api/exports/)
+	cd $(API_DIR) && $(UV) run python -m scripts.restore_json $(FILE)
 
 hash-password: ## Générer le hash bcrypt du mot de passe (à coller dans api/.env)
 	@cd $(API_DIR) && $(UV) run python -m scripts.hash_password
